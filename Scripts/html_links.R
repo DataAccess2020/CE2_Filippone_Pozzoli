@@ -24,3 +24,6 @@ links_blog1 <- as.data.frame(links_blog_unl)
 
 
 
+=======
+links2<-as.data.frame(links)
+>>>>>>> 8fd6f97512c56d2000397b4b1ccb15b4413f310c

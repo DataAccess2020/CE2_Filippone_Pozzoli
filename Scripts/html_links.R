@@ -19,3 +19,8 @@ str_view_all(link_unl, "https://beppegrillo\\.it/.+")
 links_blog <- str_extract_all(link_unl, "https://beppegrillo\\.it/.+")
 links_blog_unl <- unlist(links_blog)
 links_blog1 <- as.data.frame(links_blog_unl)
+
+
+links_blog2 <- str_extract_all(link_unl, "https://beppegrillo\\.it/[^category].+")
+links_blog_unl2 <- unlist(links_blog2)
+links_blog2<- as.data.frame(links_blog_unl2)

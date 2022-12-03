@@ -6,6 +6,4 @@ links
 
 # We organize all the links in a data frame.
 
-View(links)
 links2<-as.data.frame(links)
-View(links2)

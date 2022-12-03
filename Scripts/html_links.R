@@ -6,6 +6,21 @@ links
 
 # We organize all the links in a data frame.
 
-View(links)
 links2<-as.data.frame(links)
-View(links2)
+
+#Now we extract only the links which point to other posts of the beppegrillo.it
+
+link_unl <- unlist(links2)
+
+library(stringr)
+
+str_view_all(link_unl, "https://beppegrillo\\.it/.+")
+
+links_blog <- str_extract_all(link_unl, "https://beppegrillo\\.it/.+")
+links_blog_unl <- unlist(links_blog)
+links_blog1 <- as.data.frame(links_blog_unl)
+
+
+
+
+

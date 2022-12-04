@@ -1,8 +1,8 @@
 # SCREAPING TEXT
 
 # We scrape all the links to the blog posts 
-to_scrape <- list.files(here::here("folder_beppe"), full.names = TRUE)   # get the list of pages for the seasons
-all_html_2016 <- vector(mode = "list", length = length(to_scrape))    # empty container where to place the titles
+to_scrape <- list.files(here::here("folder_beppe"), full.names = TRUE)
+all_html_2016 <- vector(mode = "list", length = length(to_scrape))  
 
 for (i in seq_along(all_html_2016)){
   all_html_2016[[i]] = XML::getHTMLLinks(to_scrape[i], externalOnly = T)

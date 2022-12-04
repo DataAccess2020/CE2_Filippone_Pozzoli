@@ -1,0 +1,105 @@
+---
+title: "CLASS EXERCISE 2"
+author: "Lara Filippone-Cristina Pozzoli"
+date: "2022-12-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Task 1
+
+We can see that for Beppe Grillo's blog there isn't any robots.txt file. This means that we can proceed with our scraping, but we must do it "politely", identyfing ourselves with our email address and our R version.
+
+## Task 2
+
+We "politely" download the webpage "<http://www.beppegrillo.it/un-mare-di-plastica-ci-sommergera/>"
+
+```{r}
+library(RCurl)
+url <- "https://beppegrillo.it/un-mare-di-plastica-ci-sommergera/"
+resp <- getURL(url=url, httpheader= c(from ="cristina.pozzoli@icloud.com", 
+                              'User-Agent' = R.Version()$version.string))
+```
+
+## Task 3
+
+We create a data frame with all the HTML links in the page, using the XML: :getHTMLLinks function.
+Then, we use a regular expression to keep only those links that redirect to other posts of Beppe Grillo's blog.
+
+```{r}
+library(XML)
+links <- getHTMLLinks(doc=resp, externalOnly = T, relative = F)
+links
+links2<-as.data.frame(links)
+link_unl <- unlist(links2)
+
+library(stringr)
+
+str_view_all(link_unl, "https://beppegrillo\\.it/.+")
+
+links_blog <- str_extract_all(link_unl, "https://beppegrillo\\.it/.+")
+links_blog_unl <- unlist(links_blog)
+links_blog1 <- as.data.frame(links_blog_unl)
+
+
+links_blog2 <- str_extract_all(link_unl, "https://beppegrillo\\.it/[^category].+")
+links_blog_unl2 <- unlist(links_blog2)
+links_blog2<- as.data.frame(links_blog_unl2)
+```
+
+## Task 4
+
+We go to the link https://beppegrillo.it/category/archivio/2016/ , which contains the entire blog for 2016. First we get all the links to each of the 47 pages, then we scrape the main text for each blog post.
+
+``` {r}
+url2 <- "https://beppegrillo.it/category/archivio/2016/"
+
+resp2 <- getURL(url=url2, httpheader= c(from ="cristina.pozzoli@icloud.com", 
+                                      'User-Agent' = R.Version()))
+resp2
+
+library(rvest)
+library(XML)
+library(tidyverse)
+
+webpages <- str_c("https://beppegrillo.it/category/archivio/2016/page/", 1:47) %>%
+  paste0("/")
+webpages
+
+download_politely <- function(from_url, to_html, my_email, my_agent = R.Version()$version.string) {
+  
+  require(httr)
+   stopifnot(is.character(from_url))
+  stopifnot(is.character(to_html))
+  stopifnot(is.character(my_email))
+  simps_req <- httr::GET(url = from_url, 
+                         add_headers(
+                           From = my_email, 
+                           `User-Agent` = R.Version()$version.string
+                         )
+  )
+  if (httr::http_status(simps_req)$message == "Success: (200) OK") {
+    bin <- content(simps_req, as = "raw")
+    writeBin(object = bin, con = to_html)
+  } else {
+    cat("Houston, we have a problem!")
+  }
+}
+
+download_politely(from_url = url2, 
+                  to_html = here::here("beppegrillo_polite.html"), 
+                  my_email = "cristina.pozzoli@icloud.com")
+dir.create("folder_beppe")
+for (i in seq_along(webpages)) {
+  cat(i, " ")
+  
+  download_politely(from_url = webpages[i], 
+                    to_html = here::here("folder_beppe", str_c("page_",i,".html")), 
+                    my_email = "cristina.pozzoli@icloud.com")
+  
+  Sys.sleep(2)
+}
+```

@@ -34,3 +34,22 @@ download_politely <- function(from_url, to_html, my_email, my_agent = R.Version(
     cat("Houston, we have a problem!")
   }
 }
+
+download_politely(from_url = url2, 
+                  to_html = here::here("beppegrillo_polite.html"), 
+                  my_email = "cristina.pozzoli@icloud.com")
+
+#creation of a new folder where to store all the files 
+dir.create("folder_beppe")
+
+# Use the for loop function to download the pages as files inside a new folder 
+
+for (i in seq_along(webpages)) {
+  cat(i, " ")
+  
+  download_politely(from_url = webpages[i], 
+                    to_html = here::here("folder_beppe", str_c("page_",i,".html")), 
+                    my_email = "cristina.pozzoli@icloud.com")
+  
+  Sys.sleep(2)
+}

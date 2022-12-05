@@ -103,3 +103,27 @@ for (i in seq_along(webpages)) {
   Sys.sleep(2)
 }
 ```
+
+# Task 5
+
+In computer science, "crawling" means to automatically and systematically follow a huge amount of hyperlinks by browsing and downloading the webpages they refer to. Crawlers or web spiders are programs which are designed to execute this kind of task and are typically used by search engines for web indexing, through which they can provide in a very short time a well organized and appropriate list of webpages in response to our queries.
+
+The scraper we built is different from a crawler because we manually collected and provided a specific website to our scraper and then browsed and downloaded some of its webpages to scrape target information we were interested in. On the other hand, crawlers are not so selective and they are able to work automatically: they start from a hyperlink and then proceed to follow every other hyperlink they encounter, even those referring to external webpages.
+
+If we wanted to build a crawler with the RCrawler package, we would use its main function "rcrawler". By providing the website URL and the Xpath or CSS selector patterns, this function can crawl the whole website, download webpages, and scrape its contents in an automated manner to produce a structured dataset:
+
+```{r}
+library(Rcrawler)
+Rcrawler(Website, no_cores, no_conn, MaxDepth, DIR, RequestsDelay = 0,
+  Obeyrobots = FALSE, Useragent, use_proxy = NULL, Encod,
+  Timeout = 5, URLlenlimit = 255, urlExtfilter, dataUrlfilter,
+  crawlUrlfilter, crawlZoneCSSPat = NULL, crawlZoneXPath = NULL,
+  ignoreUrlParams, ignoreAllUrlParams = FALSE, KeywordsFilter,
+  KeywordsAccuracy, FUNPageFilter, ExtractXpathPat, ExtractCSSPat,
+  PatternsNames, ExcludeXpathPat, ExcludeCSSPat, ExtractAsText = TRUE,
+  ManyPerPattern = FALSE, saveOnDisk = TRUE, NetworkData = FALSE,
+  NetwExtLinks = FALSE, statslinks = FALSE, Vbrowser = FALSE,
+  LoggedSession)
+```
+
+The main arguments would be the root URL of the website to crawl and scrape (Website) and the Xpath or CSS patterns of page sections from where the crawler should gather links to be followed (crawlZoneXPath or crawlZoneCSSPat).

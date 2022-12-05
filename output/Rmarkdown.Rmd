@@ -26,8 +26,7 @@ resp <- getURL(url=url, httpheader= c(from ="cristina.pozzoli@icloud.com",
 
 ## Task 3
 
-We create a data frame with all the HTML links in the page, using the XML: :getHTMLLinks function.
-Then, we use a regular expression to keep only those links that redirect to other posts of Beppe Grillo's blog.
+We create a data frame with all the HTML links in the page, using the XML: :getHTMLLinks function. Then, we use a regular expression to keep only those links that redirect to other posts of Beppe Grillo's blog.
 
 ```{r}
 library(XML)
@@ -52,9 +51,9 @@ links_blog2<- as.data.frame(links_blog_unl2)
 
 ## Task 4
 
-We go to the link https://beppegrillo.it/category/archivio/2016/ , which contains the entire blog for 2016. First we get all the links to each of the 47 pages, then we scrape the main text for each blog post.
+We go to the link <https://beppegrillo.it/category/archivio/2016/> , which contains the entire blog for 2016. First we get all the links to each of the 47 pages, then we scrape the main text for each blog post.
 
-``` {r}
+```{r}
 url2 <- "https://beppegrillo.it/category/archivio/2016/"
 
 resp2 <- getURL(url=url2, httpheader= c(from ="cristina.pozzoli@icloud.com", 
@@ -110,20 +109,5 @@ In computer science, "crawling" means to automatically and systematically follow
 
 The scraper we built is different from a crawler because we manually collected and provided a specific website to our scraper and then browsed and downloaded some of its webpages to scrape target information we were interested in. On the other hand, crawlers are not so selective and they are able to work automatically: they start from a hyperlink and then proceed to follow every other hyperlink they encounter, even those referring to external webpages.
 
-If we wanted to build a crawler with the RCrawler package, we would use its main function "rcrawler". By providing the website URL and the Xpath or CSS selector patterns, this function can crawl the whole website, download webpages, and scrape its contents in an automated manner to produce a structured dataset:
-
-```{r}
-library(Rcrawler)
-Rcrawler(Website, no_cores, no_conn, MaxDepth, DIR, RequestsDelay = 0,
-  Obeyrobots = FALSE, Useragent, use_proxy = NULL, Encod,
-  Timeout = 5, URLlenlimit = 255, urlExtfilter, dataUrlfilter,
-  crawlUrlfilter, crawlZoneCSSPat = NULL, crawlZoneXPath = NULL,
-  ignoreUrlParams, ignoreAllUrlParams = FALSE, KeywordsFilter,
-  KeywordsAccuracy, FUNPageFilter, ExtractXpathPat, ExtractCSSPat,
-  PatternsNames, ExcludeXpathPat, ExcludeCSSPat, ExtractAsText = TRUE,
-  ManyPerPattern = FALSE, saveOnDisk = TRUE, NetworkData = FALSE,
-  NetwExtLinks = FALSE, statslinks = FALSE, Vbrowser = FALSE,
-  LoggedSession)
-```
-
+If we wanted to build a crawler with the RCrawler package, we would use its main function "rcrawler". By providing the website URL and the Xpath or CSS selector patterns, this function can crawl the whole website, download webpages, and scrape its contents in an automated manner to produce a structured dataset.
 The main arguments would be the root URL of the website to crawl and scrape (Website) and the Xpath or CSS patterns of page sections from where the crawler should gather links to be followed (crawlZoneXPath or crawlZoneCSSPat).

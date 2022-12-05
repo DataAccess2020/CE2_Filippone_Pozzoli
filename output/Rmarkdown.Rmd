@@ -17,7 +17,7 @@ We can see that for Beppe Grillo's blog there isn't any robots.txt file. This me
 
 We "politely" download the webpage "<http://www.beppegrillo.it/un-mare-di-plastica-ci-sommergera/>"
 
-```{r}
+```{r, results='hide'}
 library(RCurl)
 url <- "https://beppegrillo.it/un-mare-di-plastica-ci-sommergera/"
 resp <- getURL(url=url, httpheader= c(from ="cristina.pozzoli@icloud.com", 
@@ -28,7 +28,7 @@ resp <- getURL(url=url, httpheader= c(from ="cristina.pozzoli@icloud.com",
 
 We create a data frame with all the HTML links in the page, using the XML: :getHTMLLinks function. Then, we use a regular expression to keep only those links that redirect to other posts of Beppe Grillo's blog.
 
-```{r}
+```{r, results='hide'}
 library(XML)
 links <- getHTMLLinks(doc=resp, externalOnly = T, relative = F)
 links
@@ -53,7 +53,7 @@ links_blog2<- as.data.frame(links_blog_unl2)
 
 We go to the link <https://beppegrillo.it/category/archivio/2016/> , which contains the entire blog for 2016. First we get all the links to each of the 47 pages, then we scrape the main text for each blog post.
 
-```{r}
+```{r, results='hide'}
 url2 <- "https://beppegrillo.it/category/archivio/2016/"
 
 resp2 <- getURL(url=url2, httpheader= c(from ="cristina.pozzoli@icloud.com", 
@@ -101,6 +101,58 @@ for (i in seq_along(webpages)) {
   
   Sys.sleep(2)
 }
+
+to_scrape <- list.files(here::here("folder_beppe"), full.names = TRUE)
+all_html_2016 <- vector(mode = "list", length = length(to_scrape))  
+
+for (i in seq_along(all_html_2016)){
+  all_html_2016[[i]] = XML::getHTMLLinks(to_scrape[i], externalOnly = T)
+  
+  Sys.sleep(0.5)
+}
+
+all_html_2016_unl <- unlist(all_html_2016)
+links <- str_extract_all(all_html_2016_unl, "https://beppegrillo\\.it/[^category][^jpg].+")
+links_unl <- unlist(links)
+links_data <- as.data.frame(links_unl)
+
+prova1 <- unique(links_unl)
+prova2 <- vector(mode = "list") 
+k2=1
+
+for(i in seq_along(links_unl)) {
+  if(i == 1) {prova2[1] = links_unl[1]}
+  flag = 0
+  for (k in seq_along(prova2)) {
+    if (links_unl[i]==prova2[k]) {flag=1}
+  }
+  if (flag==0) {k2=(k2+1)
+  prova2[k2]=links_unl[i]
+  }
+}
+
+links_blog_posts <- unique(links_unl)
+dir.create("Blog_posts")
+for (i in seq_along(links_blog_posts)) {
+  cat(i, " ")
+  
+  download_politely(from_url = links_blog_posts[i], 
+                    to_html = here::here("Blog_posts", str_c("blog_",i,".html")), 
+                    my_email = "cristina.pozzoli@icloud.com")
+  
+  Sys.sleep(2)
+}
+library(rvest)
+library(stringr)
+
+scrape_posts <- list.files(here::here("Blog_posts"), pattern="*.html", full.names = TRUE)
+
+blog_main_text <- lapply(scrape_posts, function(x) {
+  read = read_html(x) %>% 
+    html_elements(css = "p") %>% 
+    html_text(trim = TRUE)
+})
+blog_main_text[[4]]
 ```
 
 # Task 5

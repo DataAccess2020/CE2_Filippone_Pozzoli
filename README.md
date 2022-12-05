@@ -9,7 +9,11 @@ This is the repository for our second class exercise. It contains the following 
 INSIGHTS
 
 Commits by Cristina Pozzoli: 17
-Commits by Lara Filippone: 11
+
+Commits by Lara Filippone: 12
+
 Accepted and merged pull requests: 2
+
 Issues opened: 1
+
 Branches opened: 2

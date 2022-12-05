@@ -41,3 +41,22 @@ for(i in seq_along(links_unl)) {
 
 links_blog_posts <- unique(links_unl)
 
+# Now we have to download the pages as a file 
+
+dir.create("Blog_posts")   # Create a new folder where to store all the files
+
+
+for (i in seq_along(links_blog_posts)) {
+  cat(i, " ")
+  
+  download_politely(from_url = links_blog_posts[i], 
+                    to_html = here::here("Blog_posts", str_c("blog_",i,".html")), 
+                    my_email = "cristina.pozzoli@icloud.com")
+  
+  Sys.sleep(2)
+}
+
+
+
+
+
